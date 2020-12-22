@@ -2,10 +2,14 @@ import Component from '../lib/component';
 import store from '../store/index';
 
 export default class List extends Component {
-  constructor() {
+  constructor(parent) {
     super({
       store,
-      element: document.querySelector('.js-items'),
+      parent,
+      element: {
+        type: 'div',
+        class: 'js-items',
+      },
     });
   }
 

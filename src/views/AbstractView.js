@@ -1,15 +1,15 @@
 /* eslint-disable class-methods-use-this */
 
-export default class {
-  constructor(params) {
-    this.params = params;
+export default class AbstractView {
+  constructor() {
+    this.wrapper = document.getElementById('wrapper');
   }
 
   setTitle(title) {
     document.title = title;
   }
 
-  getHtml() {
+  async mountPage() {
     return '';
   }
 }

@@ -2,10 +2,14 @@ import Component from '../lib/component';
 import store from '../store/index';
 
 export default class Count extends Component {
-  constructor() {
+  constructor(parent) {
     super({
       store,
-      element: document.querySelector('.js-count'),
+      parent,
+      element: {
+        type: 'div',
+        class: 'js-count',
+      },
     });
   }
 
