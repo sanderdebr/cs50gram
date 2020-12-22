@@ -1,0 +1,15 @@
+/* eslint-disable class-methods-use-this */
+
+export default class {
+  constructor(params) {
+    this.params = params;
+  }
+
+  setTitle(title) {
+    document.title = title;
+  }
+
+  getHtml() {
+    return '';
+  }
+}
