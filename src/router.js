@@ -1,53 +1,63 @@
 /* eslint-disable prefer-template */
-/* eslint-disable no-param-reassign */
 
-import Dashboard from './views/Dashboard';
-import Login from './views/Login';
+import Utils from './services/Utils';
 
-const pathToRegex = (path) =>
-  new RegExp(
-    '^' + path.replace(/\//g, '\\/').replace(/:\w+/g, '(.+)') + '$'
-  );
+import Navbar from './views/components/Navbar';
+import Footer from './views/components/Footer';
 
-const getParams = (match) => {
-  const values = match.result.slice(1);
-  const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
-    (result) => result[1]
-  );
+import Home from './views/pages/Home';
+import Post from './views/pages/Post';
+import Register from './views/pages/Register';
+import Error404 from './views/pages/Error404';
 
-  return Object.fromEntries(keys.map((key, i) => [key, values[i]]));
+import Test from './views/pages/Test';
+import Test2 from './views/pages/Test2';
+import store from './store/index';
+
+const routes = {
+  '/': Home,
+  '/post/:id': Post,
+  '/test': Test,
+  '/test2': Test2,
+  '/register': Register,
 };
 
 const router = async () => {
-  const routes = [
-    { path: '/', View: Dashboard },
-    { path: '/login', View: Login },
-    { path: '/dashboard/', View: Dashboard },
-  ];
+  // Lazy load element
+  const header = null || document.getElementById('header');
+  const content = null || document.getElementById('page');
+  const footer = null || document.getElementById('footer');
 
-  // Test each route for potential match
-  const potentialMatches = routes.map((route) => ({
-    route,
-    result: window.location.pathname.match(pathToRegex(route.path)),
-  }));
+  // Render the header and footer
+  header.innerHTML = await Navbar.render();
+  await Navbar.after_render();
+  footer.innerHTML = await Footer.render();
+  await Footer.after_render();
 
-  let match = potentialMatches.find(
-    (potentialMatch) => potentialMatch.result !== null
-  );
+  // Get the parsed URL from addressbar
+  const request = Utils.parseRequestURL();
 
-  if (!match) {
-    match = {
-      route: routes[0],
-      result: [window.location.pathname],
-    };
-  }
+  // Parse the URL and if it has an ID, change it with the string ":id"
+  const parsedURL =
+    (request.resource ? '/' + request.resource : '/') +
+    (request.id ? '/:id' : '') +
+    (request.verb ? '/' + request.verb : '');
 
-  const newView = new match.route.View(getParams(match));
+  // Get the page from our hash of supported routes
 
-  // Unmount current page
+  const Page = routes[parsedURL] ? routes[parsedURL] : Error404;
 
-  // Mount new page
-  await newView.mountPage();
+  const pageInstance = new Page();
+
+  // Render first instance
+  content.innerHTML = await pageInstance.render();
+
+  // Refresh content.innerHTML on every state change
+  store.events.subscribe('stateChange', async () => {
+    content.innerHTML = await pageInstance.render();
+  });
+
+  await pageInstance.afterRender();
 };
 
 export default router;

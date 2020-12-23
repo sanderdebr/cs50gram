@@ -1,11 +1,11 @@
 export default {
-  addItem(state, payload) {
-    state.items.push(payload);
+  addPost(state, payload) {
+    state.posts.push(payload);
 
     return state;
   },
-  clearItem(state, payload) {
-    state.items.splice(payload.index, 1);
+  clearPost(state, payload) {
+    state.posts.splice(payload.index, 1);
 
     return state;
   },

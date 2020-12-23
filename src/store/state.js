@@ -1,3 +1,3 @@
 export default {
-  items: ['I made this', 'Awesome app'],
+  posts: ['Trip to Africa', 'Selfie'],
 };

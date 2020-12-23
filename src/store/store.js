@@ -26,13 +26,10 @@ export default class Store {
         state[key] = value;
 
         console.log(`stateChange: ${key}: ${value}`);
-
         this.events.publish('stateChange', this.state);
-
         if (this.status !== 'mutation') {
           console.warn(`You should use a mutation to set ${key}`);
         }
-
         this.status = 'resting';
 
         return true;

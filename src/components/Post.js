@@ -1,28 +1,30 @@
 import Component from '../lib/component';
 import store from '../store/index';
 
-export default class List extends Component {
+export default class Post extends Component {
   constructor(parent) {
     super({
       store,
       parent,
       element: {
         type: 'div',
-        class: 'js-items',
+        attrs: {
+          class: 'js-post',
+        },
       },
     });
   }
 
   render() {
-    if (store.state.items.length === 0) {
+    if (store.state.posts.length === 0) {
       this.element.innerHTML = `<p>You've done nothing yet.</p>`;
       return;
     }
 
-    this.element.innerHTML = `<ul>${store.state.items
+    this.element.innerHTML = `<ul>${store.state.posts
       .map(
-        (item) =>
-          `<li>${item}<button aria-label="Delete this item">x</button></li>`
+        (post) =>
+          `<li>${post}<button aria-label="Delete this post">x</button></li>`
       )
       .join('')}</ul>`;
 
@@ -30,8 +32,10 @@ export default class List extends Component {
       .querySelectorAll('button')
       .forEach((button, index) => {
         button.addEventListener('click', () => {
-          store.dispatch('clearItem', { index });
+          store.dispatch('clearPost', { index });
         });
       });
+
+    return this.element.outerHTML;
   }
 }

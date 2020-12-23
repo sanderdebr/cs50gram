@@ -1,8 +1,8 @@
 export default {
-  addItem(context, payload) {
-    context.commit('addItem', payload);
+  addPost(context, payload) {
+    context.commit('addPost', payload);
   },
-  clearItem(context, payload) {
-    context.commit('clearItem', payload);
+  clearPost(context, payload) {
+    context.commit('clearPost', payload);
   },
 };
