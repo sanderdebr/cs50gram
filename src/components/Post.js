@@ -18,7 +18,6 @@ export default class Post extends Component {
   render() {
     if (store.state.posts.length === 0) {
       this.element.innerHTML = `<p>You've done nothing yet.</p>`;
-      return;
     }
 
     this.element.innerHTML = `<ul>${store.state.posts
