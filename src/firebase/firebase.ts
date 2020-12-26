@@ -3,7 +3,7 @@ import 'firebase/firestore'
 
 import firebase from 'firebase/app'
 
-const CLIENT_CONFIG = {
+const FIREBASE_CONFIG = {
   apiKey: 'AIzaSyAS8l_CqyplvwBq3l0a8vINzsYujG7bt8M',
   authDomain: 'cs50gram.firebaseapp.com',
   projectId: 'cs50gram',
@@ -13,21 +13,24 @@ const CLIENT_CONFIG = {
   measurementId: 'G-SMY4TBTJX8',
 }
 
-export const firestore = firebase.firestore()
+export default class FirebaseInstance {
+  auth: any
+  firestore: any
+  googleProvider: any
+  onAuthStateChanged: any
+  user: any
 
-class Firebase {
   constructor() {
-    firebase.initializeApp(CLIENT_CONFIG)
+    if (!firebase.apps.length) {
+      firebase.initializeApp(FIREBASE_CONFIG)
+    }
 
     this.auth = firebase.auth()
-    this.provider = new firebase.auth.GoogleAuthProvider()
+    this.firestore = firebase.firestore()
+    this.googleProvider = new firebase.auth.GoogleAuthProvider()
   }
 
   // Auth API
-
-  signInWithGoogle() {
-    return this.auth.signInWithPopup(provider)
-  }
+  doSignInWithGoogle: React.FC<null> = () => this.auth.signInWithPopup(this.googleProvider)
+  doSignOut: React.FC<null> = () => this.auth.signOut()
 }
-
-export default Firebase

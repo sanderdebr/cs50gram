@@ -1,16 +1,14 @@
 import React, { useContext } from 'react'
 
-import { AuthContext } from '../firebase/context'
-import { signInWithGoogle } from '../firebase/firebase'
+import { FirebaseContext } from '../firebase/context'
+import SignInUp from '../components/SignInUp'
 
 const Home = () => {
-  const user = useContext(AuthContext)
+  const user = useContext(FirebaseContext)
+
   console.log(user)
 
-  return user.user ? (
-    'user logged in'
-  ) : (
-    <button onClick={() => signInWithGoogle()}>Sign In With Google</button>
-  )
+  return <SignInUp />
 }
+
 export default Home

@@ -1,15 +1,17 @@
+import '../index.css'
+
 import { AppProps } from 'next/app'
-import { AuthProvider } from '../firebase/context'
+import { FirebaseProvider } from '../firebase/context'
 import Head from 'next/head'
 
-const CS50Gram = ({ Component, pageProps }: AppProps) => (
+const CS50Gram: React.FC<null> = ({ Component, pageProps }: AppProps) => (
   <>
     <Head>
       <title>CS50Gram</title>
     </Head>
-    <AuthProvider>
+    <FirebaseProvider>
       <Component {...pageProps} />
-    </AuthProvider>
+    </FirebaseProvider>
   </>
 )
 
