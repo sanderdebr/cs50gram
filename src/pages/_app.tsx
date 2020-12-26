@@ -1,6 +1,6 @@
-import { AppProps } from "next/app";
-import { AuthProvider } from "../firebase/context";
-import Head from "next/head";
+import { AppProps } from 'next/app'
+import { AuthProvider } from '../firebase/context'
+import Head from 'next/head'
 
 const CS50Gram = ({ Component, pageProps }: AppProps) => (
   <>
@@ -11,6 +11,6 @@ const CS50Gram = ({ Component, pageProps }: AppProps) => (
       <Component {...pageProps} />
     </AuthProvider>
   </>
-);
+)
 
-export default CS50Gram;
+export default CS50Gram

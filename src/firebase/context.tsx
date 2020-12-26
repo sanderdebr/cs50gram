@@ -1,51 +1,27 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from 'react'
 
-import { firebaseClient } from "./firebaseClient";
-import nookies from "nookies";
+import { auth } from './firebase'
+import firebaseClient from 'firebase/app'
 
-const AuthContext = createContext<{ user: firebaseClient.User | null }>({
+// Create context that holds user data
+export const AuthContext = createContext<{ user: firebaseClient.User }>({
   user: null,
-});
+})
 
-export const AuthProvider = ({ children }: any) => {
-  const [user, setUser] = useState<firebaseClient.User | null>(null);
+type ProviderProps = {
+  children: React.ReactNode
+}
 
+// Provider that passed user data down
+export const AuthProvider: React.FC = ({ children }: ProviderProps) => {
+  const [user, setUser] = useState({ user: null })
+
+  // Listen to changes in current user - on first mount
   useEffect(() => {
-    if (typeof window !== undefined) {
-      (window as any).nookies = nookies;
-    }
+    auth.onAuthStateChanged((userAuth) => {
+      setUser({ user: userAuth })
+    })
+  }, [])
 
-    return firebaseClient.auth().onIdTokenChanged(async (user) => {
-      console.log("token changed!");
-
-      if (!user) {
-        console.log("no token found..");
-        setUser(null);
-        nookies.destroy(null, "token");
-        nookies.set(null, "token", "", {});
-        return;
-      }
-
-      console.log("updating token..");
-      const token = await user.getIdToken();
-      setUser(user);
-      nookies.destroy(null, "token");
-      nookies.set(null, "token", token, {});
-    });
-  }, []);
-
-  // Fore refresh of token every 15 min
-  useEffect(() => {
-    const handle = setInterval(async () => {
-      console.log("refreshing token..");
-      const user = firebaseClient.auth().currentUser;
-      if (user) await user.getIdToken(true);
-    }, 1000 * 60 * 10);
-  });
-
-  return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
-  );
-};
-
-export const useAuth = () => useContext(AuthContext);
+  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>
+}
