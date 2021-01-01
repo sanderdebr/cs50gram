@@ -1,10 +1,9 @@
-import React, { useContext } from 'react'
-
-import { FirebaseContext } from '../firebase/context'
+import React from 'react'
 import SignInUp from '../components/SignInUp'
+import { useAuth } from '../firebase/auth'
 
 const Home = () => {
-  const user = useContext(FirebaseContext)
+  const user = useAuth()
 
   console.log(user)
 
