@@ -38,6 +38,10 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': ['error'],
         // Includes .prettierrc.js rules
         'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+        // Turn of return type on function
+        '@typescript-eslint/explicit-function-return-type': {
+          allowExpressions: true,
+        },
       },
     },
   ],

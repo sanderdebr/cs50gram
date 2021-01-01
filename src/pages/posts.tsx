@@ -1,6 +1,5 @@
 import React, { useContext} from "react";
 import { AuthContext} from "../firebase/auth";
-import { auth} from "../firebase/firebaseClient"
 
 const Posts = () => {
     const user = useContext(AuthContext);

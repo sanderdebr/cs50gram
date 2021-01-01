@@ -1,8 +1,8 @@
 import 'firebase/auth'
 
-import firebaseClient from 'firebase/app'
+import firebase from 'firebase/app'
 
-const CONFIG = {
+const config = {
   apiKey: 'AIzaSyAS8l_CqyplvwBq3l0a8vINzsYujG7bt8M',
   authDomain: 'cs50gram.firebaseapp.com',
   projectId: 'cs50gram',
@@ -13,9 +13,10 @@ const CONFIG = {
 }
 
 // Prevent multiple firebase instances
-if (!firebaseClient.apps.length) {
-  firebaseClient.initializeApp(CONFIG)
-  console.log('firebase initiliazed')
+const initFirebase = () => {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(config)
+  }
 }
 
-export { firebaseClient }
+export default initFirebase

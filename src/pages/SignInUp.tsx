@@ -1,6 +1,6 @@
 import React from 'react'
 import { firebaseClient } from '../firebase/firebaseClient'
-import { useForm } from '../hooks/'
+import { useForm } from '../hooks'
 
 const SignIn: React.FC<unknown> = () => {
   const initialValues = {
