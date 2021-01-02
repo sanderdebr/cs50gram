@@ -1,8 +1,9 @@
 import React from 'react'
-import { firebaseClient } from '../firebase/firebaseClient'
+import firebase from 'firebase/app'
+import initFirebase from '../firebase/initFirebase'
 import { useForm } from '../hooks'
 
-const SignIn: React.FC<unknown> = () => {
+const SignInUp: React.FC<unknown> = () => {
   const initialValues = {
     email: '',
     password: '',
@@ -14,8 +15,8 @@ const SignIn: React.FC<unknown> = () => {
 
   // Callback for handleSubmit
   const onSubmit = async ({ email, password }) => {
-    await firebaseClient.auth().createUserWithEmailAndPassword(email, password)
-    console.log('user added')
+    const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
+    console.log(user)
   }
 
   return (
@@ -127,4 +128,4 @@ const SignIn: React.FC<unknown> = () => {
   )
 }
 
-export default SignIn
+export default SignInUp

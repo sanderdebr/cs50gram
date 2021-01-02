@@ -1,6 +1,10 @@
 import 'firebase/auth'
 
+import { Redirect, Route } from 'react-router-dom'
+
+import React from 'react'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
+import { connect } from 'react-redux'
 import firebase from 'firebase/app'
 import initFirebase from '../firebase/initFirebase'
 import { mapUserData } from './../firebase/mapUserData'

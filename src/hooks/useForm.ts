@@ -1,18 +1,15 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 
+import { IFormProps } from '../interfaces'
+import { IFormValues } from './../interfaces/index'
 import { isEmpty } from '../utils/utils'
 
-interface IFormProps {
-  email?: string
-  password?: string
-}
-
-export const useForm = <T>({ initialValues }: T) => {
-  const [values, setValues] = useState<T>(initialValues)
+export const useForm = ({ initialValues }: IFormProps) => {
+  const [values, setValues] = useState<{ initialValues: IFormValues }>({ initialValues })
   const [touched, setTouched] = useState({})
 
-  const validate = (values: IFormProps) => {
-    const errors: IFormProps = {}
+  const validate = (values) => {
+    const errors: IFormValues = {}
     if (!values.email) {
       errors.email = 'Email is required'
     }
