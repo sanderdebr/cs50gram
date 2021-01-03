@@ -3,12 +3,9 @@ import 'firebase/auth'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { getUserFromCookie, removeUserCookie, setUserCookie } from './userCookies'
 
-import firebase from 'firebase/app'
-import initFirebase from './initFirebase'
+import { auth } from './firebase'
 import { mapUserData } from './mapUserData'
 import { useRouter } from 'next/router'
-
-initFirebase()
 
 export const AuthContext = createContext({ user: null })
 
@@ -18,7 +15,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Keep state and cookie up to date
-    const cancelAuthListener = firebase.auth().onIdTokenChanged(async (user) => {
+    const cancelAuthListener = auth.onIdTokenChanged(async (user) => {
       if (user) {
         const userData = await mapUserData(user)
         setUserCookie(userData)
@@ -42,8 +39,4 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
-}
-
-export const useAuth = () => {
-  return useContext(AuthContext)
 }

@@ -1,7 +1,7 @@
 import '../index.css'
 
 import { AppProps } from 'next/app'
-import { AuthProvider } from '../firebase/auth'
+import { AuthProvider } from '../firebase/context'
 import Head from 'next/head'
 
 const CS50Gram = ({ Component, pageProps }: AppProps) => (

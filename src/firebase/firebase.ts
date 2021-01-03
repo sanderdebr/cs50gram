@@ -1,4 +1,6 @@
 import 'firebase/auth'
+import 'firebase/firestore'
+import 'firebase/storage'
 
 import firebase from 'firebase/app'
 
@@ -19,4 +21,14 @@ const initFirebase = () => {
   }
 }
 
-export default initFirebase
+initFirebase()
+
+const app = firebase.app()
+const auth = firebase.auth()
+const db = firebase.firestore()
+const now = firebase.firestore.Timestamp.now()
+const storage = firebase.storage()
+
+console.log(app.name ? 'Firebase activiated!' : 'Firebase not working')
+
+export { auth, db, now, storage }

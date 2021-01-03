@@ -1,9 +1,12 @@
-import React from 'react'
-import firebase from 'firebase/app'
-import initFirebase from '../firebase/initFirebase'
-import { useForm } from '../hooks'
+import React, { useState } from 'react'
 
-const SignInUp: React.FC<unknown> = () => {
+import Link from 'next/link'
+import { LoginData } from '../interfaces'
+import { auth } from '../firebase/firebase'
+import { useForm } from '../hooks'
+import { useRouter } from 'next/router'
+
+const SignIn: React.FC = () => {
   const initialValues = {
     email: '',
     password: '',
@@ -13,10 +16,28 @@ const SignInUp: React.FC<unknown> = () => {
     initialValues,
   })
 
+  const [firebaseError, setFirebaseError] = useState(null)
+
+  const router = useRouter()
+
+  // Authenticate user
+  const signIn = async ({ email, password }: LoginData) => {
+    try {
+      const userAuth = await auth.signInWithEmailAndPassword(email, password)
+      return userAuth
+    } catch (error) {
+      throw error
+    }
+  }
+
   // Callback for handleSubmit
-  const onSubmit = async ({ email, password }) => {
-    const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
-    console.log(user)
+  const onSubmit = async (data: LoginData) => {
+    try {
+      const user = await signIn(data)
+      router.push('/posts')
+    } catch (error) {
+      setFirebaseError(error.message)
+    }
   }
 
   return (
@@ -80,6 +101,7 @@ const SignInUp: React.FC<unknown> = () => {
             </div>
           </div>
           <div>
+            <div className="text-sm text-red-600 mb-4">{firebaseError && firebaseError}</div>
             <button
               onClick={handleSubmit(onSubmit)}
               disabled={!valid}
@@ -117,9 +139,11 @@ const SignInUp: React.FC<unknown> = () => {
             </div>
             <p className="text-center text-sm text-gray-600 mt-4">
               No account?{' '}
-              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                Click here to sign up
-              </a>
+              <Link href="/signup">
+                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                  Click here to sign up
+                </a>
+              </Link>
             </p>
           </div>
         </form>
@@ -128,4 +152,4 @@ const SignInUp: React.FC<unknown> = () => {
   )
 }
 
-export default SignInUp
+export default SignIn

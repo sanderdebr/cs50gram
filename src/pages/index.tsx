@@ -1,12 +1,12 @@
 import Posts from './posts'
-import SignInUp from './SignInUp'
-import { useAuth } from '../firebase/auth'
+import SignIn from './signin'
+import { useAuth } from '../hooks/useAuth'
 
 const Index = () => {
   const { user } = useAuth()
 
   if (!user) {
-    return <SignInUp />
+    return <SignIn />
   }
 
   return <Posts />

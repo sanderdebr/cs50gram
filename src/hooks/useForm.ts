@@ -5,7 +5,7 @@ import { IFormValues } from './../interfaces/index'
 import { isEmpty } from '../utils/utils'
 
 export const useForm = ({ initialValues }: IFormProps) => {
-  const [values, setValues] = useState<{ initialValues: IFormValues }>({ initialValues })
+  const [values, setValues] = useState({ initialValues })
   const [touched, setTouched] = useState({})
 
   const validate = (values) => {

@@ -1,12 +1,21 @@
 import React from 'react'
 import firebase from 'firebase/app'
-import { useAuth } from '../firebase/auth'
+import { useAuth } from '../hooks/useAuth'
 import { useRouter } from 'next/router'
+import useSWR from 'swr'
+
+const fetcher = (url, token) =>
+  fetch(url, {
+    method: 'GET',
+    headers: new Headers({ 'Content-Type': 'application/json', token }),
+    credentials: 'same-origin',
+  }).then((res) => res.json())
+
 const Posts = () => {
   const { user } = useAuth()
-  const router = useRouter()
+  const { data, error } = useSWR(user ? ['/api/getFood', user.token] : null, fetcher)
 
-  console.log(user)
+  const router = useRouter()
 
   const logout = async () => {
     return firebase
@@ -14,7 +23,7 @@ const Posts = () => {
       .signOut()
       .then(() => {
         // sign out succesful
-        router.push('/aitj')
+        router.push('/')
       })
       .catch((error) => {
         console.log(error)
@@ -24,7 +33,8 @@ const Posts = () => {
   return (
     <>
       <h3>Posts</h3>
-      <h1></h1>
+      {error && <div>Failed to fetch food!</div>}
+      {data && !error ? <div>Your favorite food is {data.food}.</div> : <div>Loading...</div>}
       <button onClick={() => logout()}>Logout</button>
     </>
   )
