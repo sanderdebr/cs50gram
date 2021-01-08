@@ -1,19 +1,15 @@
 import React, { useState } from 'react'
 
+import { IFormProps } from '../interfaces'
 import Link from 'next/link'
-import { LoginData } from '../interfaces'
 import { auth } from '../firebase/firebase'
 import { useForm } from '../hooks'
 import { useRouter } from 'next/router'
 
 const SignIn: React.FC = () => {
-  const initialValues = {
+  const { handleSubmit, handleChange, handleBlur, values, errors, touched, valid } = useForm({
     email: '',
     password: '',
-  }
-
-  const { handleSubmit, handleChange, handleBlur, values, errors, touched, valid } = useForm({
-    initialValues,
   })
 
   const [firebaseError, setFirebaseError] = useState(null)
@@ -21,7 +17,7 @@ const SignIn: React.FC = () => {
   const router = useRouter()
 
   // Authenticate user
-  const signIn = async ({ email, password }: LoginData) => {
+  const signIn = async ({ email, password }: IFormProps) => {
     try {
       const userAuth = await auth.signInWithEmailAndPassword(email, password)
       return userAuth
@@ -31,7 +27,7 @@ const SignIn: React.FC = () => {
   }
 
   // Callback for handleSubmit
-  const onSubmit = async (data: LoginData) => {
+  const onSubmit = async (data: IFormProps) => {
     try {
       const user = await signIn(data)
       router.push('/posts')

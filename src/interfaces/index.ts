@@ -1,13 +1,9 @@
-export interface IFormValues {
-  email?: string
-  password?: string
-}
-
 export interface IFormProps {
-  initialValues: IFormValues
-}
-
-export interface LoginData {
+  name?: string
   email: string
   password: string
+}
+
+export interface IStringObject {
+  [key: string]: any
 }

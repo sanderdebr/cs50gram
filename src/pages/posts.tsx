@@ -1,4 +1,5 @@
 import React from 'react'
+import SignIn from './signin'
 import firebase from 'firebase/app'
 import { useAuth } from '../hooks/useAuth'
 import { useRouter } from 'next/router'
@@ -13,6 +14,11 @@ const fetcher = (url, token) =>
 
 const Posts = () => {
   const { user } = useAuth()
+
+  if (!user) {
+    return <SignIn />
+  }
+
   const { data, error } = useSWR(user ? ['/api/getFood', user.token] : null, fetcher)
 
   const router = useRouter()
