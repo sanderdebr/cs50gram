@@ -1,19 +1,12 @@
+import Navbar from '../components/Navbar'
 import React from 'react'
 import SignIn from './signin'
-import firebase from 'firebase/app'
+import { fetcher } from '../utils/'
 import { useAuth } from '../hooks/useAuth'
-import { useRouter } from 'next/router'
 import useSWR from 'swr'
 
-const fetcher = (url, token) =>
-  fetch(url, {
-    method: 'GET',
-    headers: new Headers({ 'Content-Type': 'application/json', token }),
-    credentials: 'same-origin',
-  }).then((res) => res.json())
-
 const Posts = () => {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
 
   if (!user) {
     return <SignIn />
@@ -21,28 +14,11 @@ const Posts = () => {
 
   const { data, error } = useSWR(user ? ['/api/getFood', user.token] : null, fetcher)
 
-  const router = useRouter()
-
-  const logout = async () => {
-    return firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        // sign out succesful
-        router.push('/')
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
-
   return (
-    <>
-      <h3>Posts</h3>
-      {error && <div>Failed to fetch food!</div>}
-      {data && !error ? <div>Your favorite food is {data.food}.</div> : <div>Loading...</div>}
-      <button onClick={() => logout()}>Logout</button>
-    </>
+    <div className="bg-gray-50 h-full">
+      <Navbar userName={user.name} logout={logout} />
+      <main className="container max-w-screen-lg	p-4 mx-auto h-full bg-white">cntent</main>
+    </div>
   )
 }
 

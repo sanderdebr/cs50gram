@@ -1,15 +1,18 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { IFormProps, IStringObject } from './../interfaces/'
 
-import { isEmpty } from '../utils/utils'
+import { isEmpty } from '../utils'
 
-export const useForm = ({ name, email, password }: IFormProps) => {
+export const useForm = ({ name, email, password, exception = null }: IFormProps) => {
   const [values, setValues] = useState({ name, email, password })
   const [touched, setTouched] = useState<IStringObject>({})
 
-  const validate = (values) => {
+  const validate = () => {
     const errors: IStringObject = {}
-    if (!email) {
+    if (!values.name) {
+      errors.name = 'Name is required'
+    }
+    if (!values.email) {
       errors.email = 'Email is required'
     }
     if (!values.password) {
@@ -31,8 +34,8 @@ export const useForm = ({ name, email, password }: IFormProps) => {
     setValues((prevValues) => ({ ...prevValues, [name]: value }))
   }
 
-  const errors = validate ? validate(values) : {}
-  const valid = isEmpty(errors)
+  const errors = validate ? validate() : {}
+  const valid = isEmpty(errors, exception)
 
   const handleSubmit = (onSubmit) => {
     return (event: FormEvent<HTMLButtonElement>) => {

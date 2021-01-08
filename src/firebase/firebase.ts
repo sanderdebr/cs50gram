@@ -5,13 +5,13 @@ import 'firebase/storage'
 import firebase from 'firebase/app'
 
 const config = {
-  apiKey: 'AIzaSyAS8l_CqyplvwBq3l0a8vINzsYujG7bt8M',
-  authDomain: 'cs50gram.firebaseapp.com',
-  projectId: 'cs50gram',
-  storageBucket: 'cs50gram.appspot.com',
-  messagingSenderId: '986699145151',
-  appId: '1:986699145151:web:1005b7bd722796407e4b0a',
-  measurementId: 'G-SMY4TBTJX8',
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 }
 
 // Prevent multiple firebase instances

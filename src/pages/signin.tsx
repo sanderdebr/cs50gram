@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import { IFormProps } from '../interfaces'
 import Link from 'next/link'
+import Logo from '../components/Logo'
 import { auth } from '../firebase/firebase'
 import { useForm } from '../hooks'
 import { useRouter } from 'next/router'
@@ -10,9 +11,11 @@ const SignIn: React.FC = () => {
   const { handleSubmit, handleChange, handleBlur, values, errors, touched, valid } = useForm({
     email: '',
     password: '',
+    exception: 'name',
   })
 
   const [firebaseError, setFirebaseError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const router = useRouter()
 
@@ -28,21 +31,19 @@ const SignIn: React.FC = () => {
 
   // Callback for handleSubmit
   const onSubmit = async (data: IFormProps) => {
+    setLoading(true)
     try {
       const user = await signIn(data)
-      router.push('/posts')
     } catch (error) {
       setFirebaseError(error.message)
+      setLoading(false)
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 shadow-lg">
-        <div>
-          <img className="mx-auto h-12 w-auto" src="./images/logo.svg" alt="Logo" />
-          <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">CS50Gram</h2>
-        </div>
+      <div className="max-w-md w-full space-y-8 bg-white p-8 shadow rounded">
+        <Logo large />
         <form className="mt-6 space-y-6" action="#" method="POST">
           <div>
             <input type="hidden" name="remember" value="true" />
@@ -52,7 +53,7 @@ const SignIn: React.FC = () => {
               name="email"
               placeholder="john.doe@company.com"
               autoComplete="email"
-              className="block w-full p-3 mt-4 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded-md "
+              className="block w-full p-3 mt-4 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded hover:shadow-md"
               required
               value={values.email}
               onChange={handleChange}
@@ -67,7 +68,7 @@ const SignIn: React.FC = () => {
               name="password"
               placeholder="********"
               autoComplete="new-password"
-              className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded-md  "
+              className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded  shadow hover:shadow-md"
               required
               value={values.password}
               onChange={handleChange}
@@ -83,7 +84,7 @@ const SignIn: React.FC = () => {
                 id="remember_me"
                 name="remember_me"
                 type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded shadow"
               />
               <label htmlFor="remember_me" className="ml-2 block text-sm text-gray-900">
                 Remember me
@@ -101,7 +102,7 @@ const SignIn: React.FC = () => {
             <button
               onClick={handleSubmit(onSubmit)}
               disabled={!valid}
-              className="disabled:opacity-50 shadow group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="disabled:opacity-50 shadow group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded shadow text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 hover:shadow-md"
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                 {/* <!-- Heroicon name: lock-closed --> */}
@@ -119,17 +120,20 @@ const SignIn: React.FC = () => {
                   />
                 </svg>
               </span>
-              Sign in
+              {loading ? 'Loading...' : 'Sign in'}
             </button>
             <div className="text-center text-sm my-4">Or continue with</div>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="flex-grow p-3 text-center bg-white shadow-md  rounded-md hover:bg-gray-300 cursor-pointer">
+            <div className="flex space-x-4">
+              <div className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer">
+                <img className="mx-auto h-6 w-auto" src="./icons/search.svg" alt="Google" />
                 Google
               </div>
-              <div className="flex-grow p-3 text-center bg-white shadow-md  rounded-md hover:bg-gray-300 cursor-pointer">
+              <div className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer">
+                <img className="mx-auto h-6 w-auto" src="./icons/facebook.svg" alt="Facebook" />
                 Facebook
               </div>
-              <div className="flex-grow p-3 text-center bg-white shadow-md  rounded-md hover:bg-gray-300 cursor-pointer">
+              <div className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer">
+                <img className="mx-auto h-6 w-auto" src="./icons/github.svg" alt="Github" />
                 Github
               </div>
             </div>

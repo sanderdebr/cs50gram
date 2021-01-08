@@ -1,24 +1,22 @@
 import React, { useState } from 'react'
 import { auth, db } from '../firebase/firebase'
 
+import { IFormProps } from '../interfaces'
 import Link from 'next/link'
-import { LoginData } from '../interfaces'
 import { useForm } from '../hooks'
 import { useRouter } from 'next/router'
 
 const SignUp: React.FC = () => {
-  const initialValues = {
+  const { handleSubmit, handleChange, handleBlur, values, errors, touched, valid } = useForm({
+    name: '',
     email: '',
     password: '',
-  }
-
-  const { handleSubmit, handleChange, handleBlur, values, errors, touched, valid } = useForm({
-    initialValues,
   })
 
   const router = useRouter()
 
   const [firebaseError, setFirebaseError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   // Add user to Firestore
   const createUser = async (user) => {
@@ -30,10 +28,10 @@ const SignUp: React.FC = () => {
   }
 
   // Authenticate user
-  const signUp = async ({ email, password }: LoginData) => {
+  const signUp = async ({ name, email, password }: IFormProps) => {
     try {
       const userAuth = await auth.createUserWithEmailAndPassword(email, password)
-      const userDb = await createUser({ uid: userAuth.user.uid, email })
+      const userDb = await createUser({ uid: userAuth.user.uid, name, email })
       return userAuth
     } catch (error) {
       throw error
@@ -41,12 +39,14 @@ const SignUp: React.FC = () => {
   }
 
   // Callback for handleSubmit
-  const onSubmit = async (data: LoginData) => {
+  const onSubmit = async (data: IFormProps) => {
+    setLoading(true)
     try {
       const user = await signUp(data)
       router.push('/posts')
     } catch (error) {
       setFirebaseError(error.message)
+      setLoading(false)
     }
   }
 
@@ -61,10 +61,25 @@ const SignUp: React.FC = () => {
           <div>
             <input type="hidden" name="remember" value="true" />
             <input
+              id="name"
+              type="name"
+              name="name"
+              placeholder="Name"
+              autoComplete="name"
+              className="block w-full p-3 mt-4 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded-md "
+              required
+              value={values.name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <div className="text-sm text-red-600 my-2">
+              {errors.email && touched.email && errors.email}
+            </div>
+            <input
               id="email"
               type="email"
               name="email"
-              placeholder="john.doe@company.com"
+              placeholder="Email"
               autoComplete="email"
               className="block w-full p-3 mt-4 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded-md "
               required
@@ -133,7 +148,7 @@ const SignUp: React.FC = () => {
                   />
                 </svg>
               </span>
-              Sign up
+              {loading ? 'Loading...' : 'Sign up'}
             </button>
             <div className="text-center text-sm my-4">Or continue with</div>
             <div className="grid grid-cols-3 gap-4">
