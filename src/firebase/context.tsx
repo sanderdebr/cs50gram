@@ -1,17 +1,25 @@
 import 'firebase/auth'
 
-import { auth, db } from './firebase'
+import { auth, db, facebookProvider, githubProvider, googleProvider } from '.'
 import { createContext, useEffect, useState } from 'react'
 import { getUserFromCookie, removeUserCookie, setUserCookie } from './userCookies'
 
-import firebase from 'firebase/app'
-import { mapUserData } from './mapUserData'
+import { mapUserData } from '../utils'
 import { useRouter } from 'next/router'
 
-export const AuthContext = createContext({ user: null, logout: null })
+const getUserAdditionalData = async (id) => await db.collection('users').doc(id).get()
+
+export const AuthContext = createContext({
+  user: null,
+  authErr: null,
+  logout: null,
+  signInWith: null,
+})
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
+  const [authErr, setAuthErr] = useState(null)
+
   const router = useRouter()
 
   useEffect(() => {
@@ -21,10 +29,10 @@ export const AuthProvider = ({ children }) => {
         const userData = await mapUserData(user)
 
         // Get additional data
-        const getUserAdditionalData = await db.collection('users').doc(userData.id).get()
+        const additionalData = await getUserAdditionalData(userData.id)
 
-        if (getUserAdditionalData.data()) {
-          const { name } = getUserAdditionalData.data()
+        if (additionalData.data()) {
+          const { name } = additionalData.data()
           setUserCookie({ ...userData, name })
           setUser({ ...userData, name })
         }
@@ -51,8 +59,7 @@ export const AuthProvider = ({ children }) => {
     removeUserCookie()
     setUser(null)
 
-    return firebase
-      .auth()
+    return auth
       .signOut()
       .then(() => {
         // sign out succesful
@@ -63,5 +70,42 @@ export const AuthProvider = ({ children }) => {
       })
   }
 
-  return <AuthContext.Provider value={{ user, logout }}>{children}</AuthContext.Provider>
+  const signInWith = (provider) => {
+    let authProvider
+
+    if (provider === 'google') {
+      authProvider = googleProvider
+    } else if (provider === 'facebook') {
+      authProvider = facebookProvider
+    } else if (provider === 'github') {
+      authProvider === githubProvider
+    }
+
+    return auth
+      .signInWithPopup(authProvider)
+      .then(async (response) => {
+        const userData = await mapUserData(response.user)
+
+        // Get additional data
+        const additionalData = await getUserAdditionalData(userData.id)
+
+        if (additionalData.data()) {
+          const { name } = additionalData.data()
+          setUserCookie({ ...userData, name })
+          setUser({ ...userData, name })
+        } else {
+          setUser(userData)
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        setAuthErr(error)
+      })
+  }
+
+  return (
+    <AuthContext.Provider value={{ user, authErr, logout, signInWith }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }

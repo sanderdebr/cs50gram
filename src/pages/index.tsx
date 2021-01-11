@@ -1,6 +1,6 @@
 import Posts from './posts'
 import SignIn from './signin'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../hooks/'
 
 const Index = () => {
   const { user } = useAuth()

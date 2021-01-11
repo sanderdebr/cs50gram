@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
+import { useAuth, useForm } from '../hooks'
 
 import { IFormProps } from '../interfaces'
 import Link from 'next/link'
 import Logo from '../components/Logo'
-import { auth } from '../firebase/firebase'
-import { useForm } from '../hooks'
-import { useRouter } from 'next/router'
+import { auth } from '../firebase'
 
 const SignIn: React.FC = () => {
   const { handleSubmit, handleChange, handleBlur, values, errors, touched, valid } = useForm({
@@ -17,7 +16,7 @@ const SignIn: React.FC = () => {
   const [firebaseError, setFirebaseError] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const router = useRouter()
+  const { authErr, signInWith } = useAuth()
 
   // Authenticate user
   const signIn = async ({ email, password }: IFormProps) => {
@@ -122,17 +121,27 @@ const SignIn: React.FC = () => {
               </span>
               {loading ? 'Loading...' : 'Sign in'}
             </button>
+            <div className="text-sm text-red-600 my-2">{authErr?.message && authErr.message}</div>
             <div className="text-center text-sm my-4">Or continue with</div>
             <div className="flex space-x-4">
-              <div className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer">
+              <div
+                onClick={() => signInWith('google')}
+                className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer"
+              >
                 <img className="mx-auto h-6 w-auto" src="./icons/search.svg" alt="Google" />
                 Google
               </div>
-              <div className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer">
+              <div
+                onClick={() => signInWith('facebook')}
+                className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer"
+              >
                 <img className="mx-auto h-6 w-auto" src="./icons/facebook.svg" alt="Facebook" />
                 Facebook
               </div>
-              <div className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer">
+              <div
+                onClick={() => signInWith('github')}
+                className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer"
+              >
                 <img className="mx-auto h-6 w-auto" src="./icons/github.svg" alt="Github" />
                 Github
               </div>

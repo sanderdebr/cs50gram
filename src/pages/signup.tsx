@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { auth, db } from '../firebase/firebase'
+import { auth, db } from '../firebase'
 
 import { IFormProps } from '../interfaces'
 import Link from 'next/link'
+import Logo from '../components/Logo'
 import { useForm } from '../hooks'
 import { useRouter } from 'next/router'
 
@@ -53,10 +54,7 @@ const SignUp: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 shadow-lg">
-        <div>
-          <img className="mx-auto h-12 w-auto" src="./images/logo.svg" alt="Logo" />
-          <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">CS50Gram</h2>
-        </div>
+        <Logo large />
         <form className="mt-6 space-y-6" action="#" method="POST">
           <div>
             <input type="hidden" name="remember" value="true" />
@@ -151,14 +149,17 @@ const SignUp: React.FC = () => {
               {loading ? 'Loading...' : 'Sign up'}
             </button>
             <div className="text-center text-sm my-4">Or continue with</div>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="flex-grow p-3 text-center bg-white shadow-md  rounded-md hover:bg-gray-300 cursor-pointer">
+            <div className="flex space-x-4">
+              <div className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer">
+                <img className="mx-auto h-6 w-auto" src="./icons/search.svg" alt="Google" />
                 Google
               </div>
-              <div className="flex-grow p-3 text-center bg-white shadow-md  rounded-md hover:bg-gray-300 cursor-pointer">
+              <div className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer">
+                <img className="mx-auto h-6 w-auto" src="./icons/facebook.svg" alt="Facebook" />
                 Facebook
               </div>
-              <div className="flex-grow p-3 text-center bg-white shadow-md  rounded-md hover:bg-gray-300 cursor-pointer">
+              <div className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer">
+                <img className="mx-auto h-6 w-auto" src="./icons/github.svg" alt="Github" />
                 Github
               </div>
             </div>

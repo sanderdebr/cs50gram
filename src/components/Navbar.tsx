@@ -28,7 +28,7 @@ const Navbar = ({ userName, logout }: INavbar) => (
           className="font-bold text-white text-sm rounded-full bg-gray-900 flex items-center justify-center font-mono ring-2 ring-gray-900 ring-offset-2"
           style={{ height: '20px', width: '20px' }}
         >
-          {userName.slice(0, 1)}
+          {userName && userName.slice(0, 1)}
         </div>
       </div>
     </div>

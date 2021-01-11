@@ -2,7 +2,7 @@ import Navbar from '../components/Navbar'
 import React from 'react'
 import SignIn from './signin'
 import { fetcher } from '../utils/'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../hooks/'
 import useSWR from 'swr'
 
 const Posts = () => {

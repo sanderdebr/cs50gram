@@ -29,6 +29,10 @@ const db = firebase.firestore()
 const now = firebase.firestore.Timestamp.now()
 const storage = firebase.storage()
 
+const googleProvider = new firebase.auth.GoogleAuthProvider()
+const facebookProvider = new firebase.auth.FacebookAuthProvider()
+const githubProvider = new firebase.auth.GithubAuthProvider()
+
 console.log(app.name ? 'Firebase activiated!' : 'Firebase not working')
 
-export { auth, db, now, storage }
+export { auth, db, now, storage, googleProvider, facebookProvider, githubProvider }
