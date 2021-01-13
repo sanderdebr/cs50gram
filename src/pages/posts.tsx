@@ -12,7 +12,7 @@ const Posts = () => {
     return <SignIn />
   }
 
-  const { data, error } = useSWR(user ? ['/api/getFood', user.token] : null, fetcher)
+  // const { data, error } = useSWR(user ? ['/api/getFood', user.token] : null, fetcher)
 
   return (
     <div className="bg-gray-50 h-full">

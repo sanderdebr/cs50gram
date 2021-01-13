@@ -1,12 +1,17 @@
 import React, { useState } from 'react'
+import { auth, facebookProvider, githubProvider, googleProvider } from '../firebase/firebase'
+import { createUser, getUserAdditionalData, mapUserData } from '../firebase/utils'
 import { useAuth, useForm } from '../hooks'
 
 import { IFormProps } from '../interfaces'
 import Link from 'next/link'
 import Logo from '../components/Logo'
-import { auth } from '../firebase'
+import { setUserCookie } from '../firebase/userCookies'
+import { useRouter } from 'next/router'
 
 const SignIn: React.FC = () => {
+  const router = useRouter()
+
   const { handleSubmit, handleChange, handleBlur, values, errors, touched, valid } = useForm({
     email: '',
     password: '',
@@ -16,9 +21,11 @@ const SignIn: React.FC = () => {
   const [firebaseError, setFirebaseError] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const { authErr, signInWith } = useAuth()
+  const [authErr, setAuthErr] = useState(null)
 
-  // Authenticate user
+  const { setUser } = useAuth()
+
+  // Sign in user with email/password
   const signIn = async ({ email, password }: IFormProps) => {
     try {
       const userAuth = await auth.signInWithEmailAndPassword(email, password)
@@ -33,10 +40,41 @@ const SignIn: React.FC = () => {
     setLoading(true)
     try {
       const user = await signIn(data)
+      router.push('/posts')
     } catch (error) {
       setFirebaseError(error.message)
       setLoading(false)
     }
+  }
+
+  // Sign in + up user with integrations
+  const signInWith = async (provider) => {
+    return auth
+      .signInWithPopup(provider)
+      .then(async (response) => {
+        console.log('User signed in')
+        const userData = await mapUserData(response.user)
+
+        // Get additional data
+        const additionalData = await getUserAdditionalData(userData.id)
+
+        if (additionalData.data()) {
+          const { name } = additionalData.data()
+          setUserCookie({ ...userData, name })
+          setUser({ ...userData, name })
+        } else {
+          // Add to database
+          await createUser({ uid: userData.id, name: null, email: userData.email })
+          console.log('User added to FireStore')
+          setUser(userData)
+        }
+
+        setAuthErr(null)
+      })
+      .catch((error) => {
+        console.log(error)
+        setAuthErr(error)
+      })
   }
 
   return (
@@ -125,21 +163,21 @@ const SignIn: React.FC = () => {
             <div className="text-center text-sm my-4">Or continue with</div>
             <div className="flex space-x-4">
               <div
-                onClick={() => signInWith('google')}
+                onClick={() => signInWith(googleProvider)}
                 className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer"
               >
                 <img className="mx-auto h-6 w-auto" src="./icons/search.svg" alt="Google" />
                 Google
               </div>
               <div
-                onClick={() => signInWith('facebook')}
+                onClick={() => signInWith(facebookProvider)}
                 className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer"
               >
                 <img className="mx-auto h-6 w-auto" src="./icons/facebook.svg" alt="Facebook" />
                 Facebook
               </div>
               <div
-                onClick={() => signInWith('github')}
+                onClick={() => signInWith(githubProvider)}
                 className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer"
               >
                 <img className="mx-auto h-6 w-auto" src="./icons/github.svg" alt="Github" />

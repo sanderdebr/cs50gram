@@ -1,24 +1,20 @@
 import 'firebase/auth'
 
-import { auth, db, facebookProvider, githubProvider, googleProvider } from '.'
+import { auth, db, facebookProvider, githubProvider, googleProvider } from './firebase'
 import { createContext, useEffect, useState } from 'react'
+import { getUserAdditionalData, mapUserData } from './utils'
 import { getUserFromCookie, removeUserCookie, setUserCookie } from './userCookies'
 
-import { mapUserData } from '../utils'
 import { useRouter } from 'next/router'
-
-const getUserAdditionalData = async (id) => await db.collection('users').doc(id).get()
 
 export const AuthContext = createContext({
   user: null,
-  authErr: null,
+  setUser: null,
   logout: null,
-  signInWith: null,
 })
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
-  const [authErr, setAuthErr] = useState(null)
 
   const router = useRouter()
 
@@ -70,42 +66,5 @@ export const AuthProvider = ({ children }) => {
       })
   }
 
-  const signInWith = (provider) => {
-    let authProvider
-
-    if (provider === 'google') {
-      authProvider = googleProvider
-    } else if (provider === 'facebook') {
-      authProvider = facebookProvider
-    } else if (provider === 'github') {
-      authProvider === githubProvider
-    }
-
-    return auth
-      .signInWithPopup(authProvider)
-      .then(async (response) => {
-        const userData = await mapUserData(response.user)
-
-        // Get additional data
-        const additionalData = await getUserAdditionalData(userData.id)
-
-        if (additionalData.data()) {
-          const { name } = additionalData.data()
-          setUserCookie({ ...userData, name })
-          setUser({ ...userData, name })
-        } else {
-          setUser(userData)
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-        setAuthErr(error)
-      })
-  }
-
-  return (
-    <AuthContext.Provider value={{ user, authErr, logout, signInWith }}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={{ user, setUser, logout }}>{children}</AuthContext.Provider>
 }

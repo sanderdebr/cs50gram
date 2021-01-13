@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { auth, db } from '../firebase'
+import { auth, db } from '../firebase/firebase'
+import { useAuth, useForm } from '../hooks'
 
 import { IFormProps } from '../interfaces'
 import Link from 'next/link'
 import Logo from '../components/Logo'
-import { useForm } from '../hooks'
+import { createUser } from '../firebase/utils'
 import { useRouter } from 'next/router'
 
 const SignUp: React.FC = () => {
@@ -15,24 +16,17 @@ const SignUp: React.FC = () => {
   })
 
   const router = useRouter()
+  const { setUser } = useAuth()
 
   const [firebaseError, setFirebaseError] = useState(null)
   const [loading, setLoading] = useState(false)
-
-  // Add user to Firestore
-  const createUser = async (user) => {
-    try {
-      await db.collection('users').doc(user.uid).set(user)
-    } catch (error) {
-      throw error
-    }
-  }
 
   // Authenticate user
   const signUp = async ({ name, email, password }: IFormProps) => {
     try {
       const userAuth = await auth.createUserWithEmailAndPassword(email, password)
-      const userDb = await createUser({ uid: userAuth.user.uid, name, email })
+      console.log('User added to Firebase authentication')
+      await createUser({ uid: userAuth.user.uid, name, email })
       return userAuth
     } catch (error) {
       throw error
@@ -148,21 +142,6 @@ const SignUp: React.FC = () => {
               </span>
               {loading ? 'Loading...' : 'Sign up'}
             </button>
-            <div className="text-center text-sm my-4">Or continue with</div>
-            <div className="flex space-x-4">
-              <div className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer">
-                <img className="mx-auto h-6 w-auto" src="./icons/search.svg" alt="Google" />
-                Google
-              </div>
-              <div className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer">
-                <img className="mx-auto h-6 w-auto" src="./icons/facebook.svg" alt="Facebook" />
-                Facebook
-              </div>
-              <div className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer">
-                <img className="mx-auto h-6 w-auto" src="./icons/github.svg" alt="Github" />
-                Github
-              </div>
-            </div>
             <p className="text-center text-sm text-gray-600 mt-4">
               Got an account already?{' '}
               <Link href="/signin">
