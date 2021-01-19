@@ -1,4 +1,6 @@
 import Navbar from '../components/Navbar'
+import Post from '../components/Post'
+import PrivateRoute from './_private'
 import React from 'react'
 import SignIn from './signin'
 import { fetcher } from '../utils/'
@@ -14,11 +16,16 @@ const Posts = () => {
 
   // const { data, error } = useSWR(user ? ['/api/getFood', user.token] : null, fetcher)
 
+  const posts = [1, 2, 3]
+
   return (
-    <div className="bg-gray-50 h-full">
-      <Navbar userName={user.name} logout={logout} />
-      <main className="container max-w-screen-lg	p-4 mx-auto h-full bg-white">cntent</main>
-    </div>
+    <PrivateRoute>
+      <main className="container pt-20 space-y-6 py-6 max-w-xl mx-auto h-full">
+        {posts.map((post) => (
+          <Post />
+        ))}
+      </main>
+    </PrivateRoute>
   )
 }
 

@@ -3,7 +3,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        oleo: ['Oleo Script', 'cursive-ui'],
+        pacifico: ['Pacifico', 'cursive'],
       },
     },
   },

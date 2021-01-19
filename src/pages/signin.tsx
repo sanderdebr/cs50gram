@@ -64,9 +64,13 @@ const SignIn: React.FC = () => {
           setUser({ ...userData, name })
         } else {
           // Add to database
-          await createUser({ uid: userData.id, name: null, email: userData.email })
-          console.log('User added to FireStore')
-          setUser(userData)
+          const newUser = await createUser({ uid: userData.id, name: null, email: userData.email })
+          if (newUser === 'success') {
+            console.log('User added to FireStore')
+            setUser(userData)
+          } else {
+            setAuthErr(newUser)
+          }
         }
 
         setAuthErr(null)
@@ -79,7 +83,7 @@ const SignIn: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 shadow rounded">
+      <div className="max-w-md w-full space-y-8 bg-white p-8 shadow rounded-sm">
         <Logo large />
         <form className="mt-6 space-y-6" action="#" method="POST">
           <div>
@@ -90,7 +94,7 @@ const SignIn: React.FC = () => {
               name="email"
               placeholder="john.doe@company.com"
               autoComplete="email"
-              className="block w-full p-3 mt-4 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded hover:shadow-md"
+              className="block w-full p-3 mt-4 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded-sm hover:shadow-md"
               required
               value={values.email}
               onChange={handleChange}
@@ -105,7 +109,7 @@ const SignIn: React.FC = () => {
               name="password"
               placeholder="********"
               autoComplete="new-password"
-              className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded  shadow hover:shadow-md"
+              className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded-sm  shadow hover:shadow-md"
               required
               value={values.password}
               onChange={handleChange}
@@ -115,31 +119,13 @@ const SignIn: React.FC = () => {
               {errors.password && touched.password && errors.password}
             </div>
           </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember_me"
-                name="remember_me"
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded shadow"
-              />
-              <label htmlFor="remember_me" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
-            </div>
 
-            <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                Forgot your password?
-              </a>
-            </div>
-          </div>
           <div>
             <div className="text-sm text-red-600 mb-4">{firebaseError && firebaseError}</div>
             <button
               onClick={handleSubmit(onSubmit)}
               disabled={!valid}
-              className="disabled:opacity-50 shadow group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded shadow text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 hover:shadow-md"
+              className="disabled:opacity-50 shadow group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-sm shadow text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 hover:shadow-md"
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                 {/* <!-- Heroicon name: lock-closed --> */}
@@ -164,21 +150,21 @@ const SignIn: React.FC = () => {
             <div className="flex space-x-4">
               <div
                 onClick={() => signInWith(googleProvider)}
-                className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer"
+                className="flex flex-grow p-3 text-center bg-white shadow  rounded-sm hover:shadow-md cursor-pointer"
               >
                 <img className="mx-auto h-6 w-auto" src="./icons/search.svg" alt="Google" />
                 Google
               </div>
               <div
                 onClick={() => signInWith(facebookProvider)}
-                className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer"
+                className="flex flex-grow p-3 text-center bg-white shadow  rounded-sm hover:shadow-md cursor-pointer"
               >
                 <img className="mx-auto h-6 w-auto" src="./icons/facebook.svg" alt="Facebook" />
                 Facebook
               </div>
               <div
                 onClick={() => signInWith(githubProvider)}
-                className="flex flex-grow p-3 text-center bg-white shadow  rounded hover:shadow-md cursor-pointer"
+                className="flex flex-grow p-3 text-center bg-white shadow  rounded-sm hover:shadow-md cursor-pointer"
               >
                 <img className="mx-auto h-6 w-auto" src="./icons/github.svg" alt="Github" />
                 Github

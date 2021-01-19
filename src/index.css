@@ -2,6 +2,10 @@
 @import 'tailwindcss/components';
 
 /* Your own custom component styles */
-@import url('https://fonts.googleapis.com/css2?family=Oleo+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
 @import 'tailwindcss/utilities';
+
+body {
+  background-color: #f9fafb;
+}

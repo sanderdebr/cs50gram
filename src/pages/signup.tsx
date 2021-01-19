@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { auth, db } from '../firebase/firebase'
-import { useAuth, useForm } from '../hooks'
 
 import { IFormProps } from '../interfaces'
 import Link from 'next/link'
 import Logo from '../components/Logo'
+import { auth } from '../firebase/firebase'
 import { createUser } from '../firebase/utils'
+import { useForm } from '../hooks'
 import { useRouter } from 'next/router'
 
 const SignUp: React.FC = () => {
@@ -16,7 +16,6 @@ const SignUp: React.FC = () => {
   })
 
   const router = useRouter()
-  const { setUser } = useAuth()
 
   const [firebaseError, setFirebaseError] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -26,7 +25,14 @@ const SignUp: React.FC = () => {
     try {
       const userAuth = await auth.createUserWithEmailAndPassword(email, password)
       console.log('User added to Firebase authentication')
-      await createUser({ uid: userAuth.user.uid, name, email })
+      const newUser = await createUser({ uid: userAuth.user.uid, name, email })
+
+      if (newUser === 'success') {
+        console.log('User added to FireStore')
+      } else {
+        throw newUser
+      }
+
       return userAuth
     } catch (error) {
       throw error
@@ -51,14 +57,13 @@ const SignUp: React.FC = () => {
         <Logo large />
         <form className="mt-6 space-y-6" action="#" method="POST">
           <div>
-            <input type="hidden" name="remember" value="true" />
             <input
               id="name"
               type="name"
               name="name"
               placeholder="Name"
               autoComplete="name"
-              className="block w-full p-3 mt-4 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded-md "
+              className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded-sm "
               required
               value={values.name}
               onChange={handleChange}
@@ -73,7 +78,7 @@ const SignUp: React.FC = () => {
               name="email"
               placeholder="Email"
               autoComplete="email"
-              className="block w-full p-3 mt-4 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded-md "
+              className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded-sm "
               required
               value={values.email}
               onChange={handleChange}
@@ -88,7 +93,7 @@ const SignUp: React.FC = () => {
               name="password"
               placeholder="********"
               autoComplete="new-password"
-              className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded-md  "
+              className="block w-full p-3 mt-2 text-gray-700 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-300 focus:shadow-inner rounded-sm  "
               required
               value={values.password}
               onChange={handleChange}
@@ -98,31 +103,13 @@ const SignUp: React.FC = () => {
               {errors.password && touched.password && errors.password}
             </div>
           </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember_me"
-                name="remember_me"
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="remember_me" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
-            </div>
 
-            <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                Forgot your password?
-              </a>
-            </div>
-          </div>
           <div>
             <div className="text-sm text-red-600 mb-4">{firebaseError && firebaseError}</div>
             <button
               onClick={handleSubmit(onSubmit)}
               disabled={!valid}
-              className="disabled:opacity-50 shadow group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="disabled:opacity-50 shadow group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                 {/* <!-- Heroicon name: lock-closed --> */}
