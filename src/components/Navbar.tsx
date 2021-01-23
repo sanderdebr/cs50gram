@@ -24,11 +24,11 @@ const Navbar = ({ userName, logout }: INavbar) => (
       <div className="flex space-x-4 items-center">
         <Link href="/add-post">
           <div className="cursor-pointer bg-white p-1 rounded-full text-gray-400">
-            <img className="mx-auto h-5 w-auto" src="./icons/add.svg" alt="Logo" />
+            <img className="mx-auto h-5 w-auto" src="/static/icons/add.svg" alt="Logo" />
           </div>
         </Link>
         <button onClick={() => logout()} className="bg-white p-1 rounded-full text-gray-400">
-          <img className="mx-auto h-4 w-auto" src="./icons/logout.svg" alt="Logo" />
+          <img className="mx-auto h-4 w-auto" src="/static/icons/logout.svg" alt="Logo" />
         </button>
         <div
           className="font-bold text-white text-sm rounded-full bg-gray-900 flex items-center justify-center font-mono ring-2 ring-gray-900 ring-offset-2"

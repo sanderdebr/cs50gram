@@ -89,7 +89,7 @@ const addPost = () => {
           </div>
         )}
         {loading ? (
-          <img className="mx-auto h-12 w-auto" src="./spinner.gif" alt="Logo" />
+          <img className="mx-auto h-12 w-auto" src="/static/spinner.gif" alt="Logo" />
         ) : (
           <>
             <input

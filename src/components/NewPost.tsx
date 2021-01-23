@@ -12,7 +12,7 @@ const NewPost = ({
   <article className="flex flex-col w-full bg-white border border-gray-200 rounded-sm">
     <header className="flex justify-between items-center space-x-3 p-4">
       <Link href="/posts">
-        <img className="cursor-pointer h-3 w-auto" src="./icons/close.svg" alt="close" />
+        <img className="cursor-pointer h-3 w-auto" src="/static/icons/close.svg" alt="close" />
       </Link>
       <h2 className="text-lg font-medium">New post</h2>
       <button onClick={handleShare} className="font-medium text-blue-600">

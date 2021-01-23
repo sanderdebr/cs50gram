@@ -152,21 +152,25 @@ const SignIn: React.FC = () => {
                 onClick={() => signInWith(googleProvider)}
                 className="flex flex-grow p-3 text-center bg-white shadow  rounded-sm hover:shadow-md cursor-pointer"
               >
-                <img className="mx-auto h-6 w-auto" src="./icons/search.svg" alt="Google" />
+                <img className="mx-auto h-6 w-auto" src="/static/icons/search.svg" alt="Google" />
                 Google
               </div>
               <div
                 onClick={() => signInWith(facebookProvider)}
                 className="flex flex-grow p-3 text-center bg-white shadow  rounded-sm hover:shadow-md cursor-pointer"
               >
-                <img className="mx-auto h-6 w-auto" src="./icons/facebook.svg" alt="Facebook" />
+                <img
+                  className="mx-auto h-6 w-auto"
+                  src="/static/icons/facebook.svg"
+                  alt="Facebook"
+                />
                 Facebook
               </div>
               <div
                 onClick={() => signInWith(githubProvider)}
                 className="flex flex-grow p-3 text-center bg-white shadow  rounded-sm hover:shadow-md cursor-pointer"
               >
-                <img className="mx-auto h-6 w-auto" src="./icons/github.svg" alt="Github" />
+                <img className="mx-auto h-6 w-auto" src="/static/icons/github.svg" alt="Github" />
                 Github
               </div>
             </div>

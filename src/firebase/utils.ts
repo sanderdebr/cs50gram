@@ -49,3 +49,41 @@ export const addPostToFirestore = async (post) => {
     return error
   }
 }
+
+// Get post data
+export const getPostFromFirestore = async (postId) => {
+  try {
+    console.log(postId)
+    const postRef = db.collection('posts').doc(postId)
+    const post = await postRef.get()
+
+    if (!post.exists) {
+      throw 'No post found'
+    } else {
+      return JSON.stringify(post.data())
+    }
+  } catch (error) {
+    return error
+  }
+}
+
+// Get posts for user
+export const getPostsForUser = async (following = []) => {
+  try {
+    const posts = []
+    const postsRef = db.collection('posts')
+
+    for (let i = 0; i < following.length; i++) {
+      const snapshot = await postsRef.where('userId', '==', following[i]).get()
+      if (!snapshot.empty) {
+        snapshot.forEach((doc) => {
+          posts.push({ id: doc.id, data: doc.data() })
+        })
+      }
+    }
+
+    return posts
+  } catch (error) {
+    return error
+  }
+}
