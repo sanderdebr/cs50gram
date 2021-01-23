@@ -1,34 +1,80 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Router, useRouter } from 'next/router'
+import { addImageToStorage, addPostToFirestore } from '../firebase/utils'
 
 import NewPost from '../components/NewPost'
 import PrivateRoute from './_private'
-import { addPostToFirestore } from '../firebase/utils'
 import { useAuth } from '../hooks'
 
 const addPost = () => {
   const { user } = useAuth()
   const router = useRouter()
+  const file = useRef(null)
 
   const [comment, setComment] = useState('')
+  const [image, setImage] = useState(null)
+  const [fullImage, setFullImage] = useState(null)
+  const [location, setLocation] = useState('')
   const [error, setError] = useState(null)
+  const [selected, setSelected] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const test = {
-    dateTime: new Date(),
-    userId: user?.id,
-    comment,
-    location: 'Amsterdam',
-    image: 'img1',
+  // Handle location
+  const handleLocation = (e) => {
+    setLocation(e.target.value)
   }
+
+  // Handle picture
+  const storeImage = (e) => {
+    const imageFile = e.target.files[0]
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      setImage(e.target.result)
+    }
+
+    reader.readAsDataURL(imageFile)
+    setFullImage(imageFile)
+  }
+
+  const selectImage = () => {
+    file.current.click()
+  }
+
+  useEffect(() => {
+    if (file.current && !selected) {
+      setSelected(true)
+      selectImage()
+    }
+  })
 
   const handleComment = (e) => {
     setComment(e.target.value)
   }
 
   const handleShare = async () => {
-    const post = await addPostToFirestore(test)
+    if (!fullImage) {
+      setError('Please add a picture')
+      return
+    }
+
+    setLoading(true)
+
+    const newPost = {
+      dateTime: new Date(),
+      userId: user?.id,
+      comment,
+      location,
+    }
+
+    // Add image to Storage
+    const downloadUrl = await addImageToStorage(fullImage)
+    // Add post with reference to image to Firestore
+    const post = await addPostToFirestore({ ...newPost, downloadUrl })
+
     if (post === 'success') {
       router.push('/posts')
+      setLoading(false)
     } else {
       setError(post)
     }
@@ -42,7 +88,29 @@ const addPost = () => {
             {error}
           </div>
         )}
-        <NewPost handleShare={handleShare} comment={comment} handleComment={handleComment} />
+        {loading ? (
+          <img className="mx-auto h-12 w-auto" src="./spinner.gif" alt="Logo" />
+        ) : (
+          <>
+            <input
+              ref={file}
+              accept="image/*"
+              capture="camera"
+              onChange={storeImage}
+              className="hidden"
+              type="file"
+            />
+            <NewPost
+              image={image}
+              selectImage={selectImage}
+              location={location}
+              handleLocation={handleLocation}
+              comment={comment}
+              handleComment={handleComment}
+              handleShare={handleShare}
+            />
+          </>
+        )}
       </main>
     </PrivateRoute>
   )

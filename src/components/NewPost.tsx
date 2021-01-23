@@ -1,6 +1,14 @@
 import Link from 'next/link'
 
-const NewPost = ({ handleShare, comment, handleComment }) => (
+const NewPost = ({
+  handleShare,
+  comment,
+  image,
+  selectImage,
+  location,
+  handleLocation,
+  handleComment,
+}) => (
   <article className="flex flex-col w-full bg-white border border-gray-200 rounded-sm">
     <header className="flex justify-between items-center space-x-3 p-4">
       <Link href="/posts">
@@ -21,15 +29,20 @@ const NewPost = ({ handleShare, comment, handleComment }) => (
       </textarea>
       <div className="w-auto h-12">
         <img
-          className="w-auto h-full rounded"
-          src="https://e3.365dm.com/20/06/768x432/skynews-sky-weather-cloud-sun_5004939.jpg?20200603122525"
+          className="cursor-pointer w-auto h-full rounded"
+          onClick={selectImage}
+          src={image ? image : 'https://www.tibs.org.tw/images/default.jpg'}
         />
       </div>
     </div>
     <footer className="p-4">
-      <button className="flex justify-center py-2 px-4 border border-gray-200 text-sm font-medium rounded-sm">
-        Add location
-      </button>
+      <input
+        type="text"
+        placeholder="Add location"
+        onChange={handleLocation}
+        value={location}
+        className="flex justify-center py-2 px-4 border border-gray-200 text-sm font-medium rounded-sm"
+      />
     </footer>
   </article>
 )
