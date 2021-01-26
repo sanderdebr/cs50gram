@@ -88,6 +88,25 @@ export const getPostsForUser = async (following = []) => {
   }
 }
 
+// Get posts of one user
+export const getPostsOfUser = async (id) => {
+  try {
+    const posts = []
+    const postsRef = db.collection('posts')
+
+    const snapshot = await postsRef.where('userId', '==', id).get()
+    if (!snapshot.empty) {
+      snapshot.forEach((doc) => {
+        posts.push({ id: doc.id, data: JSON.parse(JSON.stringify(doc.data())) })
+      })
+    }
+
+    return posts
+  } catch (error) {
+    return error
+  }
+}
+
 // Add profile picture to storage
 export const addProfilePictureToStorage = async (image) => {
   try {
@@ -104,6 +123,32 @@ export const addProfilePictureToStorage = async (image) => {
 export const addProfilePictureToFirestore = async (id, url) => {
   try {
     await db.collection('users').doc(id).update({ profilePicture: url })
+    return 'success'
+  } catch (error) {
+    return error
+  }
+}
+
+// Follow or unfollow a user
+export const updateFollowing = async (id, following) => {
+  try {
+    await db
+      .collection('users')
+      .doc(id)
+      .update({ following: JSON.stringify(following) })
+    return 'success'
+  } catch (error) {
+    return error
+  }
+}
+
+// Add comment to post
+export const addComment = async (id, comment) => {
+  try {
+    await db
+      .collection('posts')
+      .doc(id)
+      .update({ comments: JSON.stringify(comment) })
     return 'success'
   } catch (error) {
     return error

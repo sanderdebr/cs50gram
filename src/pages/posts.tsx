@@ -26,8 +26,7 @@ const Posts = () => {
   const getPosts = async () => {
     // Array of user id that user is following
     const posts = []
-    const following = ['jLenHFQaBcQqSdnhjVg7SpSbz6P2']
-    const postsForUser = await getPostsForUser(following)
+    const postsForUser = await getPostsForUser(user.following)
 
     for (let i = 0; i < postsForUser.length; i++) {
       const finalPost = await addUserToPost(postsForUser[i])
@@ -41,13 +40,16 @@ const Posts = () => {
   useEffect(() => {
     setLoading(true)
     getPosts()
-  }, [])
+  }, [user])
+
+  console.log(posts)
 
   return (
     <PrivateRoute>
       <main className="container pt-20 space-y-6 py-6 max-w-xl mx-auto h-full">
-        {loading && 'Loading...'}
-        {!loading && !posts.length
+        {loading
+          ? 'Loading...'
+          : !posts.length
           ? 'Follow someone or post something to see posts'
           : posts.map((post) => <Post user={post.user} id={post.post.id} post={post.post.data} />)}
       </main>

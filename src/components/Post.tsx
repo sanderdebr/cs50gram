@@ -1,6 +1,34 @@
+import { useEffect, useState } from 'react'
+
 import Link from 'next/link'
+import { addComment } from '../firebase/utils'
+import { useAuth } from '../hooks'
 
 const Post = ({ user, id, post }) => {
+  const [comment, setComment] = useState('')
+  const [comments, setComments] = useState([])
+
+  const { user: currentUser } = useAuth()
+
+  useEffect(() => {
+    setComments(post.comments.length ? JSON.parse(post.comments) : [])
+  }, [post])
+
+  const handleChange = (e) => {
+    setComment(e.target.value)
+  }
+
+  const handlePost = async () => {
+    const newComments = [
+      ...comments,
+      { user: { id: user.uid, name: currentUser.name }, text: comment },
+    ]
+    await addComment(id, newComments)
+    setComments(newComments)
+  }
+
+  console.log(post.comments)
+
   return (
     <article className="flex flex-col w-full bg-white border border-gray-200 rounded-sm">
       <header className="flex justify-between items-center space-x-3 p-4">
@@ -30,7 +58,7 @@ const Post = ({ user, id, post }) => {
       <div className="p-4 flex flex-col space-y-1">
         <div className="flex items-center space-x-3">
           <img className="h-6 w-auto" src="/static/icons/heart.svg" alt="Like" />
-          <div className="text-sm font-medium">1.297 likes</div>
+          <div className="text-sm font-medium">{post.likes} likes</div>
         </div>
         <div className="flex items-center space-x-1">
           <div className="text-sm font-medium">{user.name}</div>
@@ -44,15 +72,25 @@ const Post = ({ user, id, post }) => {
             View all 32 comments
           </div>
         </Link>
-        <div className="flex items-center space-x-1">
-          <div className="text-sm font-medium">peter</div>
-          <div className="text-sm">Cool picture</div>
-        </div>
+        {comments &&
+          comments.map((comment) => (
+            <div className="flex items-center space-x-1">
+              <Link href={`/user/${comment.user.id}`}>
+                <div className="cursor-pointer text-sm font-medium">{comment.user.name}</div>
+              </Link>
+              <div className="text-sm">{comment.text}</div>
+            </div>
+          ))}
         <div className="text-xs font-light text-gray-400 uppercase">Yesterday</div>
       </div>
       <footer className="p-4 flex justify-between border border-gray-200 border-l-0 border-r-0 border-b-0">
-        <input className="flex-grow outline-none" placeholder="Add a comment" />
-        <button>Post</button>
+        <input
+          className="flex-grow outline-none"
+          placeholder="Add a comment"
+          value={comment}
+          onChange={handleChange}
+        />
+        <button onClick={handlePost}>Post</button>
       </footer>
     </article>
   )

@@ -69,6 +69,7 @@ const SignIn: React.FC = () => {
             name: null,
             email: userData.email,
             profilePicture: null,
+            following: null,
           })
           if (newUser === 'success') {
             console.log('User added to FireStore')

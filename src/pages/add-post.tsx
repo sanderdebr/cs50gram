@@ -62,9 +62,11 @@ const addPost = () => {
 
     const newPost = {
       dateTime: new Date(),
-      userId: user?.id,
+      userId: user.id,
       comment,
       location,
+      likes: 0,
+      comments: null,
     }
 
     // Add image to Storage
