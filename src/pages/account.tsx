@@ -43,7 +43,7 @@ const Account = () => {
 
   return (
     <PrivateRoute>
-      <main className="container pt-20 space-y-6 p-6 max-w-screen-lg mx-auto h-full bg-white">
+      <main className="container pt-20 space-y-6 p-6 max-w-2xl mx-auto h-full bg-white">
         <h1 className="text-2xl">Account settings</h1>
         {error && (
           <div className="text-sm my-2 flex items-center rounded-sm p-4 text-red-600 bg-red-100 border border-red-200">

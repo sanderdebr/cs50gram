@@ -71,7 +71,7 @@ export const getPostFromFirestore = async (postId) => {
 export const getPostsForUser = async (following = []) => {
   try {
     const posts = []
-    const postsRef = db.collection('posts')
+    const postsRef = db.collection('posts').limit(5)
 
     for (let i = 0; i < following.length; i++) {
       const snapshot = await postsRef.where('userId', '==', following[i]).get()

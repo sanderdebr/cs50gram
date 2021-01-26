@@ -19,13 +19,14 @@ const Posts = () => {
   const addUserToPost = async (post) => {
     const userData = await getUserAdditionalData(post.data.userId)
     const user = userData.data()
+    console.log(userData, user, post)
     return { post, user }
   }
 
   const getPosts = async () => {
     // Array of user id that user is following
     const posts = []
-    const following = ['SXUkfzE8rTeciowCJFaVsRCA4ms1']
+    const following = ['jLenHFQaBcQqSdnhjVg7SpSbz6P2']
     const postsForUser = await getPostsForUser(following)
 
     for (let i = 0; i < postsForUser.length; i++) {
@@ -47,7 +48,7 @@ const Posts = () => {
       <main className="container pt-20 space-y-6 py-6 max-w-xl mx-auto h-full">
         {loading && 'Loading...'}
         {!loading && !posts.length
-          ? 'No posts found'
+          ? 'Follow someone or post something to see posts'
           : posts.map((post) => <Post user={post.user} id={post.post.id} post={post.post.data} />)}
       </main>
     </PrivateRoute>

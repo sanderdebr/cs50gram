@@ -9,3 +9,7 @@
 body {
   background-color: #f9fafb;
 }
+
+.post:hover .overlay {
+  display: block;
+}
