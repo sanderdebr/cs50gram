@@ -25,7 +25,12 @@ const SignUp: React.FC = () => {
     try {
       const userAuth = await auth.createUserWithEmailAndPassword(email, password)
       console.log('User added to Firebase authentication')
-      const newUser = await createUser({ uid: userAuth.user.uid, name, email })
+      const newUser = await createUser({
+        uid: userAuth.user.uid,
+        name,
+        email,
+        profilePicture: null,
+      })
 
       if (newUser === 'success') {
         console.log('User added to FireStore')
@@ -43,7 +48,7 @@ const SignUp: React.FC = () => {
   const onSubmit = async (data: IFormProps) => {
     setLoading(true)
     try {
-      const user = await signUp(data)
+      await signUp(data)
       router.push('/posts')
     } catch (error) {
       setFirebaseError(error.message)

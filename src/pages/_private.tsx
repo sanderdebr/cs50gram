@@ -10,9 +10,11 @@ const PrivateRoute: React.FC<any> = ({ children, ...rest }) => {
     return <SignIn />
   }
 
+  console.log(user)
+
   return (
     <div className="h-full">
-      <Navbar userName={user.name} logout={logout} />
+      <Navbar userName={user.name} profilePicture={user.profilePicture} logout={logout} />
       {children}
     </div>
   )

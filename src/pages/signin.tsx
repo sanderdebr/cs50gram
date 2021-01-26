@@ -64,7 +64,12 @@ const SignIn: React.FC = () => {
           setUser({ ...userData, name })
         } else {
           // Add to database
-          const newUser = await createUser({ uid: userData.id, name: null, email: userData.email })
+          const newUser = await createUser({
+            uid: userData.id,
+            name: null,
+            email: userData.email,
+            profilePicture: null,
+          })
           if (newUser === 'success') {
             console.log('User added to FireStore')
             setUser(userData)

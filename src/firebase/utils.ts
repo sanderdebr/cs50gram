@@ -17,7 +17,7 @@ export const getUserAdditionalData = async (id) => await db.collection('users').
 // Add user to Firestore
 export const createUser = async (user) => {
   try {
-    const createdUser = await db.collection('users').doc(user.uid).set(user)
+    await db.collection('users').doc(user.uid).set(user)
     return 'success'
   } catch (error) {
     return error
@@ -83,6 +83,28 @@ export const getPostsForUser = async (following = []) => {
     }
 
     return posts
+  } catch (error) {
+    return error
+  }
+}
+
+// Add profile picture to storage
+export const addProfilePictureToStorage = async (image) => {
+  try {
+    const snapshot = await storage.ref().child('profile-pictures/').put(image)
+    console.log(`Uploaded ${snapshot.totalBytes} bytes`)
+    const downloadUrl = await snapshot.ref.getDownloadURL()
+    return downloadUrl
+  } catch (error) {
+    return error
+  }
+}
+
+// Add profile picture to firestore
+export const addProfilePictureToFirestore = async (id, url) => {
+  try {
+    await db.collection('users').doc(id).update({ profilePicture: url })
+    return 'success'
   } catch (error) {
     return error
   }

@@ -28,9 +28,9 @@ export const AuthProvider = ({ children }) => {
         const additionalData = await getUserAdditionalData(userData.id)
 
         if (additionalData.data()) {
-          const { name } = additionalData.data()
+          const { name, profilePicture } = additionalData.data()
           setUserCookie({ ...userData, name })
-          setUser({ ...userData, name })
+          setUser({ ...userData, name, profilePicture })
         }
       } else {
         removeUserCookie()
