@@ -7,7 +7,6 @@ import ProfilePost from '../../components/ProfilePost'
 import { useAuth } from '../../hooks'
 
 const User = ({ posts, user }) => {
-  return null
   const { user: currentUser, setUser } = useAuth()
 
   const [currentFollowing, setCurrentFollowing] = useState(null)
@@ -118,9 +117,7 @@ export const getServerSideProps = async (ctx) => {
   const user = await getUserAdditionalData(id)
   const posts = await getPostsOfUser(id)
 
-  const parseduser = JSON.parse(JSON.stringify(user.data()))
-
-  return { props: { user: 6, posts } }
+  return { props: { user: JSON.parse(user), posts } }
 }
 
 export default User

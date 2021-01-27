@@ -25,10 +25,12 @@ export const AuthProvider = ({ children }) => {
         const userData = await mapUserData(user)
 
         // Get additional data
-        const additionalData = await getUserAdditionalData(userData.id)
+        let additionalData = await getUserAdditionalData(userData.id)
 
-        if (additionalData.data()) {
-          const { name, profilePicture, following, liked } = additionalData.data()
+        if (additionalData !== 'No user found') {
+          additionalData = JSON.parse(additionalData)
+          const { name, profilePicture, following, liked } = additionalData
+          console.log(following, liked)
           setUserCookie({ ...userData, name })
           const followingParsed = following !== '' ? JSON.parse(following) : []
           const likedParsed = liked !== '' ? JSON.parse(liked) : []

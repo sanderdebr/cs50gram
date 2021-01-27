@@ -14,7 +14,21 @@ export const mapUserData = async (user) => {
 //TODO: deze funcite omzetten zoals andere stringify
 
 // Gets additional userdata from Firestore
-export const getUserAdditionalData = async (id) => await db.collection('users').doc(id).get()
+export const getUserAdditionalData = async (id) => {
+  try {
+    console.log(id)
+    const userRef = db.collection('users').doc(id)
+    const user = await userRef.get()
+
+    if (!user.exists) {
+      throw 'No user found'
+    } else {
+      return JSON.stringify(user.data())
+    }
+  } catch (error) {
+    return error
+  }
+}
 
 // Add user to Firestore
 export const createUser = async (user) => {

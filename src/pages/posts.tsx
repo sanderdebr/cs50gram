@@ -18,10 +18,8 @@ const Posts = () => {
   const [myLikes, setMyLikes] = useState(user.liked || [])
 
   const addUserToPost = async (post) => {
-    const userData = await getUserAdditionalData(post.data.userId)
-    const user = userData.data()
-    console.log(userData, user, post)
-    return { post, user }
+    const user = await getUserAdditionalData(post.data.userId)
+    return { post, user: JSON.parse(user) }
   }
 
   const getPosts = async () => {
@@ -46,6 +44,8 @@ const Posts = () => {
     setLoading(true)
     getPosts()
   }, [user])
+
+  console.log(posts)
 
   return (
     <PrivateRoute>
