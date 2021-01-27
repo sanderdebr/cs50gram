@@ -15,6 +15,7 @@ const Posts = () => {
 
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(false)
+  const [myLikes, setMyLikes] = useState(user.liked || [])
 
   const addUserToPost = async (post) => {
     const userData = await getUserAdditionalData(post.data.userId)
@@ -33,7 +34,11 @@ const Posts = () => {
       posts.push(finalPost)
     }
 
-    setPosts(posts)
+    const sortedPosts = posts.sort(
+      (a, b) => b.post.data.dateTime.toDate() - a.post.data.dateTime.toDate()
+    )
+
+    setPosts(sortedPosts)
     setLoading(false)
   }
 
@@ -42,8 +47,6 @@ const Posts = () => {
     getPosts()
   }, [user])
 
-  console.log(posts)
-
   return (
     <PrivateRoute>
       <main className="container pt-20 space-y-6 py-6 max-w-xl mx-auto h-full">
@@ -51,7 +54,15 @@ const Posts = () => {
           ? 'Loading...'
           : !posts.length
           ? 'Follow someone or post something to see posts'
-          : posts.map((post) => <Post user={post.user} id={post.post.id} post={post.post.data} />)}
+          : posts.map((post) => (
+              <Post
+                myLikes={myLikes}
+                setMyLikes={setMyLikes}
+                user={post.user}
+                id={post.post.id}
+                post={post.post.data}
+              />
+            ))}
       </main>
     </PrivateRoute>
   )

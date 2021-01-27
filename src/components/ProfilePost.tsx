@@ -2,6 +2,7 @@ import Link from 'next/link'
 import React from 'react'
 
 const ProfilePost = ({ post }) => {
+  console.log(post)
   return (
     <Link href={`/details/${post.id}`}>
       <article
@@ -23,16 +24,7 @@ const ProfilePost = ({ post }) => {
             className="flex justify-center items-center 
                           space-x-4 h-full"
           >
-            <span className="p-2">
-              <i className="fas fa-heart"></i>
-              412K
-            </span>
-
-            <span className="p-2">
-              {' '}
-              v<i className="fas fa-comment"></i>
-              2,909
-            </span>
+            <span className="p-2">{post.data.likes} likes</span>
           </div>
         </div>
       </article>

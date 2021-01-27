@@ -53,7 +53,6 @@ export const addPostToFirestore = async (post) => {
 // Get post data
 export const getPostFromFirestore = async (postId) => {
   try {
-    console.log(postId)
     const postRef = db.collection('posts').doc(postId)
     const post = await postRef.get()
 
@@ -131,6 +130,7 @@ export const addProfilePictureToFirestore = async (id, url) => {
 
 // Follow or unfollow a user
 export const updateFollowing = async (id, following) => {
+  console.log(id, following)
   try {
     await db
       .collection('users')
@@ -149,6 +149,29 @@ export const addComment = async (id, comment) => {
       .collection('posts')
       .doc(id)
       .update({ comments: JSON.stringify(comment) })
+    return 'success'
+  } catch (error) {
+    return error
+  }
+}
+
+// Like picture
+export const likePicture = async (id, newLikes) => {
+  try {
+    await db.collection('posts').doc(id).update({ likes: newLikes })
+    return 'success'
+  } catch (error) {
+    return error
+  }
+}
+
+// Update likes of user
+export const updateLikesOfUser = async (id, likes) => {
+  try {
+    await db
+      .collection('users')
+      .doc(id)
+      .update({ liked: JSON.stringify(likes) })
     return 'success'
   } catch (error) {
     return error

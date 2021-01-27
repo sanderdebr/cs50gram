@@ -31,6 +31,7 @@ const SignUp: React.FC = () => {
         email,
         profilePicture: null,
         following: null,
+        liked: null,
       })
 
       if (newUser === 'success') {

@@ -1,10 +1,10 @@
 import 'firebase/auth'
 
-import { auth, db, facebookProvider, githubProvider, googleProvider } from './firebase'
 import { createContext, useEffect, useState } from 'react'
 import { getUserAdditionalData, mapUserData } from './utils'
 import { getUserFromCookie, removeUserCookie, setUserCookie } from './userCookies'
 
+import { auth } from './firebase'
 import { useRouter } from 'next/router'
 
 export const AuthContext = createContext({
@@ -28,9 +28,18 @@ export const AuthProvider = ({ children }) => {
         const additionalData = await getUserAdditionalData(userData.id)
 
         if (additionalData.data()) {
-          const { name, profilePicture, following } = additionalData.data()
+          const { name, profilePicture, following, liked } = additionalData.data()
           setUserCookie({ ...userData, name })
-          setUser({ ...userData, name, profilePicture, following: JSON.parse(following) })
+          const followingParsed = following !== '' ? JSON.parse(following) : []
+          const likedParsed = liked !== '' ? JSON.parse(liked) : []
+
+          setUser({
+            ...userData,
+            name,
+            profilePicture,
+            following: followingParsed,
+            liked: likedParsed,
+          })
         }
       } else {
         removeUserCookie()

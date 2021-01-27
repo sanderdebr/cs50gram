@@ -3,11 +3,11 @@ import { getPostFromFirestore, getUserAdditionalData } from '../../firebase/util
 import Post from '../../components/Post'
 import PrivateRoute from '../_private'
 
-const Details = ({ post, user }) => {
+const Details = ({ id, post, user }) => {
   return (
     <PrivateRoute>
       <main className="container pt-20 space-y-6 py-6 max-w-xl mx-auto h-full">
-        <Post user={user} post={post} />
+        <Post id={id} user={user} post={post} detailPage />
       </main>
     </PrivateRoute>
   )
@@ -24,7 +24,7 @@ export const getServerSideProps = async (ctx) => {
   const userData = await getUserAdditionalData(post.userId)
   const user = userData.data()
 
-  return { props: { post, user } }
+  return { props: { id, post, user } }
 }
 
 export default Details

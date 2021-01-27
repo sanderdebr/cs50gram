@@ -27,7 +27,7 @@ const User = ({ posts, user }) => {
   const handleFollow = async () => {
     const newFollowing = currentFollowing
     newFollowing.push(user.uid)
-    await updateFollowing(currentUser.id, newFollowing)
+    await updateFollowing(currentUser.uid, newFollowing)
     setCurrentFollowing(newFollowing)
     setIsFollowing(true)
     setUser({ ...user, following: newFollowing })
@@ -35,7 +35,7 @@ const User = ({ posts, user }) => {
 
   const handleUnfollow = async () => {
     const newFollowing = currentFollowing.filter((item) => item !== user.uid)
-    await updateFollowing(currentUser.id, newFollowing)
+    await updateFollowing(currentUser.uid, newFollowing)
     setCurrentFollowing(newFollowing)
     setUser({ ...user, following: newFollowing })
   }
@@ -96,17 +96,7 @@ const User = ({ posts, user }) => {
 
               <ul className="hidden md:flex space-x-8 mb-4">
                 <li>
-                  <span className="font-semibold">136</span> posts
-                </li>
-
-                <li>
                   <span className="font-semibold">{user.followers}</span> followers
-                </li>
-                <li>
-                  <span className="font-semibold">
-                    {user.following ? JSON.parse(user.following).length : 0}
-                  </span>{' '}
-                  following
                 </li>
               </ul>
             </div>
