@@ -7,7 +7,7 @@ const Details = ({ id, post, user }) => {
   return (
     <PrivateRoute>
       <main className="container pt-20 space-y-6 py-6 max-w-xl mx-auto h-full">
-        <Post id={id} user={user} post={post} detailPage />
+        <Post id={id} user={user} post={post} myLikes={null} setMyLikes={null} detailPage />
       </main>
     </PrivateRoute>
   )
