@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 const NewPost = ({
+  user,
   handleShare,
   comment,
   image,
@@ -20,10 +21,18 @@ const NewPost = ({
       </button>
     </header>
     <div className="flex items-start p-4 space-x-4">
-      <img
-        className="h-9 rounded-full border border-gray-100 shadow-sm"
-        src="https://i.pinimg.com/originals/de/64/80/de64801f0275c1ab2ea5a9e2bb3ce7bc.jpg"
-      />
+      <div
+        className="cursor-pointer font-bold text-white text-sm rounded-full bg-gray-600 flex items-center justify-center font-mono"
+        style={{
+          backgroundImage: `url(${user.profilePicture})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          height: '30px',
+          width: '30px',
+        }}
+      >
+        {!user.profilePicture && user.name && user.name.slice(0, 1)}
+      </div>
       <textarea onChange={handleComment} className="flex-grow" placeholder="Add a comment">
         {comment}
       </textarea>

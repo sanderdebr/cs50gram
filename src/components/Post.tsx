@@ -9,7 +9,7 @@ const Post = ({ user, id, post, detailPage = false, myLikes, setMyLikes }) => {
   const [comment, setComment] = useState('')
   const [comments, setComments] = useState([])
   const [liked, setLiked] = useState(
-    myLikes !== undefined ? myLikes.filter((like) => like === id) !== -1 : []
+    detailPage ? null : myLikes.filter((like) => like === id) !== -1
   )
 
   const { user: currentUser } = useAuth()
@@ -31,7 +31,7 @@ const Post = ({ user, id, post, detailPage = false, myLikes, setMyLikes }) => {
     setComments(newComments)
   }
 
-  const postDate = 5 //format(post.dateTime.toDate(), 'MMMM dd, yyyy')
+  let postDate = format(new Date(post.dateTime.seconds * 1000), 'MMMM dd, yyyy')
 
   // Add deze ID aan user liked firestore
 

@@ -11,6 +11,8 @@ export const mapUserData = async (user) => {
   }
 }
 
+//TODO: deze funcite omzetten zoals andere stringify
+
 // Gets additional userdata from Firestore
 export const getUserAdditionalData = async (id) => await db.collection('users').doc(id).get()
 

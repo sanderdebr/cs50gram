@@ -103,6 +103,7 @@ const addPost = () => {
               type="file"
             />
             <NewPost
+              user={user}
               image={image}
               selectImage={selectImage}
               location={location}
